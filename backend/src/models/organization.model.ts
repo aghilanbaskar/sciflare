@@ -59,6 +59,6 @@ OrganizationSchema.pre<IOrganizationDocument>('save', function (next) {
 const Organization = mongoConnection.model<
   IOrganizationDocument,
   IOrganizationModel
->('Organization', OrganizationSchema);
+>('Organization', OrganizationSchema, 'Organization');
 
 export default Organization;

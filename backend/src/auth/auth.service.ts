@@ -3,9 +3,14 @@ import { SignUpDto } from './dto/signup.dto';
 import Organization from 'src/models/organization.model';
 import User, { IUserDocument, userRoleEnum } from 'src/models/users.model';
 import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import UserSession from 'src/models/userSession.model';
+import { IJwtPayload } from './jwt.interface';
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly jwtService: JwtService) {}
+
   async signup(signupDto: SignUpDto) {
     const session = await User.startSession();
     session.startTransaction();
@@ -86,6 +91,46 @@ export class AuthService {
     });
   }
   singleUserLogin(user: IUserDocument) {
-    return user.toJSON();
+    return this.createUserSession(user);
+  }
+
+  async createUserSession(user: IUserDocument) {
+    const jwtPayload = {
+      email: user.email,
+      organizationId: user.organizationId,
+      userId: user._id,
+      sub: user._id,
+    };
+    const userSession = new UserSession({
+      userId: user._id,
+      organizationId: user.organizationId,
+      accessToken: this.jwtService.sign(jwtPayload),
+      refreshToken: this.jwtService.sign(jwtPayload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '7d',
+      }),
+    });
+    const userSessionData = await userSession.save();
+    return userSessionData;
+  }
+
+  async refreshToken(refreshToken: string) {
+    const payload: IJwtPayload = this.jwtService.verify(refreshToken, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
+    if (!payload) {
+      throw new Error('Invalid refresh token');
+    }
+    const jwtPayload: IJwtPayload = {
+      email: payload.email,
+      organizationId: payload.organizationId,
+      userId: payload.userId,
+      sub: payload.sub,
+    };
+    return {
+      access_token: this.jwtService.sign({
+        jwtPayload,
+      }),
+    };
   }
 }
