@@ -50,7 +50,7 @@ type IUserModel = Model<IUserDocument> & {
   findByEmail(
     email: string,
     organizationId?: string,
-  ): Promise<IUserDocument | null>;
+  ): Promise<IUserDocument[] | null>;
 };
 
 export const UserSchema: Schema<IUserDocument> = new Schema(
@@ -102,7 +102,18 @@ UserSchema.statics.findByEmail = function (
   email: string,
   organizationId?: string,
 ): Promise<IUserDocument[] | null> {
-  return this.find({ email, organizationId });
+  const query: {
+    email: string;
+    deleted: boolean;
+    organizationId?: string;
+  } = {
+    email,
+    deleted: false,
+  };
+  if (organizationId) {
+    query.organizationId = organizationId;
+  }
+  return this.find(query);
 };
 
 UserSchema.index({ email: 1 });
