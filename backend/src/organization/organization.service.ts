@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
+import Organization from 'src/models/organization.model';
 
 @Injectable()
 export class OrganizationService {
@@ -9,7 +10,7 @@ export class OrganizationService {
   }
 
   findAll() {
-    return `This action returns all organization`;
+    return Organization.find({});
   }
 
   findOne(id: number) {
