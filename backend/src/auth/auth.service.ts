@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignUpDto } from './dto/signup.dto';
 import Organization from 'src/models/organization.model';
 import User, { IUserDocument, userRoleEnum } from 'src/models/users.model';
@@ -41,6 +45,9 @@ export class AuthService {
       };
     } catch (error) {
       await session.abortTransaction();
+      if (error && error.code === 11000) {
+        throw new BadRequestException('Company name already taken!');
+      }
       throw error;
     } finally {
       session.endSession();
@@ -80,8 +87,8 @@ export class AuthService {
         ...user.toJSON(),
         companyName: userCompanies.find(
           (company) =>
-            company._id.toString() === user.organizationId.toString(),
-        ).name,
+            company?._id?.toString() === user?.organizationId?.toString(),
+        )?.name,
       };
     });
   }

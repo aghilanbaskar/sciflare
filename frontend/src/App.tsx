@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from 'react-router-dom';
 import './App.css'
+import MainLayouts from './layouts/MainLayout';
+import HomePage from './pages/HomePage';
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
+import { IAuthState } from './redux/Auth/auth.types';
+import { useDispatch, useSelector } from 'react-redux';
+import usersService from './services/user.service';
+import { initializeAuth } from './redux/Auth/auth.action';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<MainLayouts />}>
+      <Route index element={<HomePage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login" element={<LoginPage />} />
+    </Route>,
   )
+)
+const mapState = ({ auth }: {auth: IAuthState }) => ({
+  userId: auth.userId,
+  currentUser: auth.user
+});
+function App() {
+  const dispatch = useDispatch();
+  const { userId } = useSelector(mapState);
+  useEffect(() => {
+    console.log('User Id Changed', userId)
+    dispatch(initializeAuth(userId));
+    
+  }, [userId]);
+  return <RouterProvider router={router} />;
 }
 
 export default App

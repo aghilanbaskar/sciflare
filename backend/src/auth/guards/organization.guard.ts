@@ -53,7 +53,7 @@ export class canAccessUser implements CanActivate {
     if (!whoUser || whoUser.deleted) {
       return false;
     }
-    if (whoUser.isOwner) {
+    if (whoUser.isOwner && !whatUser.isOwner) {
       throw new ForbiddenException('Access Denied - EU-0'); // owner
     }
 
