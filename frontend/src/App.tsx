@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
 } from 'react-router-dom';
-import './App.css'
+import './App.css';
 import MainLayouts from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
@@ -21,22 +21,21 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
-    </Route>,
+    </Route>
   )
-)
-const mapState = ({ auth }: {auth: IAuthState }) => ({
+);
+const mapState = ({ auth }: { auth: IAuthState }) => ({
   userId: auth.userId,
-  currentUser: auth.user
+  currentUser: auth.user,
 });
 function App() {
   const dispatch = useDispatch();
   const { userId } = useSelector(mapState);
   useEffect(() => {
-    console.log('User Id Changed', userId)
+    console.log('User Id Changed', userId);
     dispatch(initializeAuth(userId));
-    
   }, [userId]);
   return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

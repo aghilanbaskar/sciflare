@@ -7,7 +7,12 @@ interface UIModalProps {
   children: React.ReactNode;
 }
 
-const UIModal: React.FC<UIModalProps> = ({ isOpen, onClose, title, children }) => {
+const UIModal: React.FC<UIModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -15,11 +20,11 @@ const UIModal: React.FC<UIModalProps> = ({ isOpen, onClose, title, children }) =
       <div className="ui-modal" onClick={(e) => e.stopPropagation()}>
         <div className="ui-modal-header">
           {title && <h2>{title}</h2>}
-          <button className="ui-modal-close" onClick={onClose}>×</button>
+          <button className="ui-modal-close" onClick={onClose}>
+            ×
+          </button>
         </div>
-        <div className="ui-modal-content">
-          {children}
-        </div>
+        <div className="ui-modal-content">{children}</div>
       </div>
     </div>
   );

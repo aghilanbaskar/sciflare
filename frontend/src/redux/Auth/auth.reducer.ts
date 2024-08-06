@@ -23,11 +23,11 @@ const authReducer = (
       const payload = {
         ...state,
         ...action.payload,
-      }
-      localStorage.setItem('auth', JSON.stringify(payload))
-      localStorage.setItem('accessToken', payload.accessToken)
-      localStorage.setItem('refreshToken', payload.refreshToken)
-      return payload
+      };
+      localStorage.setItem('auth', JSON.stringify(payload));
+      localStorage.setItem('accessToken', payload.accessToken);
+      localStorage.setItem('refreshToken', payload.refreshToken);
+      return payload;
     }
     case authTypes.SIGNIN_SUCCESS: {
       return {
@@ -41,10 +41,10 @@ const authReducer = (
         resetEmailSent: true,
       };
     case authTypes.SIGNIN_MULTIPLE_USER: {
-        return {
-            ...state,
-            ...action.payload,
-        }
+      return {
+        ...state,
+        ...action.payload,
+      };
     }
     default:
       return state;

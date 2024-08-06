@@ -18,41 +18,41 @@ export const signInUserWithEmailAndPassword =
       });
       const postData: ILogin = {
         email,
-        password
-      }
+        password,
+      };
       if (organizationId) {
-        postData.organizationId = organizationId
+        postData.organizationId = organizationId;
       }
       const response = await AuthService.login(postData);
-      const data = response.data
+      const data = response.data;
       if (Array.isArray(data)) {
         const payload = {
-            success: false,
-            user: null,
-            error: [],
-            loading: false,
-            resetEmailSent: false,
-            multipleUserFlow: true,
-            multipleUsers: data,
-          };
-          dispatch({ type: authType.SIGNIN_MULTIPLE_USER, payload });
-          return payload;
+          success: false,
+          user: null,
+          error: [],
+          loading: false,
+          resetEmailSent: false,
+          multipleUserFlow: true,
+          multipleUsers: data,
+        };
+        dispatch({ type: authType.SIGNIN_MULTIPLE_USER, payload });
+        return payload;
       } else {
         const payload: IAuthState = {
-            success: true,
-            user: null,
-            error: [],
-            loading: false,
-            resetEmailSent: false,
-            multipleUserFlow: false,
-            multipleUsers: [],
-            organizationId: data.organizationId,
-            userId: data.userId,
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
-          };
-          dispatch({ type: authType.SIGNIN_SUCCESS, payload });
-          return payload;
+          success: true,
+          user: null,
+          error: [],
+          loading: false,
+          resetEmailSent: false,
+          multipleUserFlow: false,
+          multipleUsers: [],
+          organizationId: data.organizationId,
+          userId: data.userId,
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
+        };
+        dispatch({ type: authType.SIGNIN_SUCCESS, payload });
+        return payload;
       }
     } catch (error) {
       const payload = {
@@ -66,22 +66,23 @@ export const signInUserWithEmailAndPassword =
     }
   };
 
-export const initializeAuth = (userId?: string) => async (dispatch: Dispatch) => {
-  const localStorageData = localStorage.getItem('auth');
-  let payload: IAuthState= {
-    userId: userId || "",
-    user: null
-  }
-  if (localStorageData) {
-    payload = JSON.parse(localStorageData);
-  }
-  if (payload.userId) {
-    dispatch({ type: authType.INITIALIZE_AUTH, payload });
-    const userResponse = await usersService.get(payload.userId);
-    if (userResponse.data) {
-      payload.user = userResponse.data
+export const initializeAuth =
+  (userId?: string) => async (dispatch: Dispatch) => {
+    const localStorageData = localStorage.getItem('auth');
+    let payload: IAuthState = {
+      userId: userId || '',
+      user: null,
+    };
+    if (localStorageData) {
+      payload = JSON.parse(localStorageData);
     }
-    dispatch({ type: authType.INITIALIZE_AUTH, payload });
-    return payload;
-  }
-};
+    if (payload.userId) {
+      dispatch({ type: authType.INITIALIZE_AUTH, payload });
+      const userResponse = await usersService.get(payload.userId);
+      if (userResponse.data) {
+        payload.user = userResponse.data;
+      }
+      dispatch({ type: authType.INITIALIZE_AUTH, payload });
+      return payload;
+    }
+  };

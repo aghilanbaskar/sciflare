@@ -27,7 +27,11 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if ( error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {
@@ -35,16 +39,22 @@ axiosInstance.interceptors.response.use(
       }
       const newTokens = await refreshAuthToken(refreshToken);
       localStorage.setItem('accessToken', newTokens.accessToken);
-      axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + newTokens.accessToken;
-      originalRequest.headers['Authorization'] = 'Bearer ' + newTokens.accessToken;
+      axiosInstance.defaults.headers.common['Authorization'] =
+        'Bearer ' + newTokens.accessToken;
+      originalRequest.headers['Authorization'] =
+        'Bearer ' + newTokens.accessToken;
       return axiosInstance(originalRequest);
     }
     return Promise.reject(error);
   }
 );
 
-const refreshAuthToken = async (refreshToken: string): Promise<{ accessToken: string; }> => {
-  const response = await axios.post(`${baseURL}/auth/refresh-token`, { refreshToken });
+const refreshAuthToken = async (
+  refreshToken: string
+): Promise<{ accessToken: string }> => {
+  const response = await axios.post(`${baseURL}/auth/refresh-token`, {
+    refreshToken,
+  });
   return response.data;
 };
 

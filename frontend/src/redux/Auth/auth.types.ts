@@ -1,4 +1,4 @@
-import { IUser } from "../../interfaces/User";
+import { IUser } from '../../interfaces/User';
 
 export interface IAuthState {
   success: boolean;
@@ -11,7 +11,7 @@ export interface IAuthState {
   userId: string;
   resetEmailSent: boolean;
   multipleUserFlow: boolean;
-  multipleUsers: IUser[]
+  multipleUsers: IUser[];
 }
 
 export interface IAuthAction {
