@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Route,
   createBrowserRouter,
@@ -12,7 +12,6 @@ import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import { IAuthState } from './redux/Auth/auth.types';
 import { useDispatch, useSelector } from 'react-redux';
-import usersService from './services/user.service';
 import { initializeAuth } from './redux/Auth/auth.action';
 
 const router = createBrowserRouter(

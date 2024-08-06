@@ -3,7 +3,6 @@ import authType, { IAuthState } from './auth.types';
 import AuthService from '../../services/auth.service';
 import { ILogin } from '../../interfaces/Auth';
 import usersService from '../../services/user.service';
-import { useSelector } from 'react-redux';
 
 // Update the return type of signInUserWithEmailAndPassword to return the action object
 export const signInUserWithEmailAndPassword =
