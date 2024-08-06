@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { Request } from 'express';
-import { RefreshTokenGuard } from './refresh-token.guard';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { Public } from './global.auth';
 
 @Public()

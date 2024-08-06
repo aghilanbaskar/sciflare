@@ -13,12 +13,18 @@ export class OrganizationService {
     return Organization.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} organization`;
+  async findOne(id: string) {
+    const organization = await Organization.findById(id);
+    return organization.toJSON();
   }
 
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
-    return `This action updates a #${id} organization`;
+  async update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
+    const organization = await Organization.findById(id);
+    organization.set({
+      name: updateOrganizationDto.companyName,
+    });
+    await organization.save();
+    return organization.toJSON();
   }
 
   remove(id: number) {

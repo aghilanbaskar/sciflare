@@ -35,11 +35,6 @@ export class AuthService {
       });
       const userData = await user.save({ session });
       await session.commitTransaction();
-      console.log(
-        'password',
-        userData.password,
-        await userData.isValidPassword(signupDto.password),
-      );
       return {
         user: userData,
         organization: organizationData,
@@ -95,11 +90,12 @@ export class AuthService {
   }
 
   async createUserSession(user: IUserDocument) {
-    const jwtPayload = {
+    const jwtPayload: IJwtPayload = {
       email: user.email,
-      organizationId: user.organizationId,
-      userId: user._id,
-      sub: user._id,
+      organizationId: user.organizationId.toString(),
+      userId: user._id.toString(),
+      sub: user._id.toString(),
+      role: user.role,
     };
     const userSession = new UserSession({
       userId: user._id,
@@ -126,6 +122,7 @@ export class AuthService {
       organizationId: payload.organizationId,
       userId: payload.userId,
       sub: payload.sub,
+      role: payload.role,
     };
     return {
       access_token: this.jwtService.sign({

@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  NotImplementedException,
+  UseGuards,
 } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
+import { canAccessOrganization } from 'src/auth/guards/organization.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('organization')
 export class OrganizationController {
@@ -17,29 +21,32 @@ export class OrganizationController {
 
   @Post()
   create(@Body() createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationService.create(createOrganizationDto);
+    throw new NotImplementedException();
   }
 
   @Get()
   findAll() {
-    return this.organizationService.findAll();
+    throw new NotImplementedException();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.organizationService.findOne(+id);
+  @Get(':organizationId')
+  @UseGuards(canAccessOrganization)
+  findOne(@Param('organizationId') id: string) {
+    return this.organizationService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':organizationId')
+  @UseGuards(canAccessOrganization)
+  @Roles(['admin'])
   update(
-    @Param('id') id: string,
+    @Param('organizationId') id: string,
     @Body() updateOrganizationDto: UpdateOrganizationDto,
   ) {
-    return this.organizationService.update(+id, updateOrganizationDto);
+    return this.organizationService.update(id, updateOrganizationDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.organizationService.remove(+id);
+  @Delete(':organizationId')
+  remove(@Param('organizationId') id: string) {
+    throw new NotImplementedException();
   }
 }

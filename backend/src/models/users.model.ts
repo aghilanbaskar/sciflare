@@ -11,6 +11,7 @@ export interface IUser {
   lastName: string;
   deleted: boolean;
   email: string;
+  phone: string;
   avatar: string;
   organizationId: Schema.Types.ObjectId;
   password: string;
@@ -44,6 +45,7 @@ const hashPassword = (password: string, salt: string): Promise<string> => {
 
 export interface IUserDocument extends IUser, Document {
   isValidPassword(password: string): Promise<boolean>;
+  delete(): Promise<IUserDocument>;
 }
 
 type IUserModel = Model<IUserDocument> & {
@@ -62,6 +64,7 @@ export const UserSchema: Schema<IUserDocument> = new Schema(
       required: true,
       set: (value: string) => value.toLowerCase(),
     },
+    phone: { type: String, required: false },
     avatar: { type: String, required: false },
     deleted: { type: Boolean, default: false },
     organizationId: {
@@ -98,6 +101,11 @@ UserSchema.methods.isValidPassword = async function (
   return (await hashPassword(password, STATIC_SALT)) === this.password;
 };
 
+UserSchema.methods.delete = async function (): Promise<IUserDocument> {
+  this.deleted = true;
+  return this.save();
+};
+
 UserSchema.statics.findByEmail = function (
   email: string,
   organizationId?: string,
@@ -118,6 +126,7 @@ UserSchema.statics.findByEmail = function (
 
 UserSchema.index({ email: 1 });
 UserSchema.index({ organizationId: 1, email: 1 }, { unique: true });
+UserSchema.index({ organizationId: 1, deleted: 1, role: 1 });
 
 UserSchema.pre<IUserDocument>('save', async function (next) {
   if (this.isModified('password')) {

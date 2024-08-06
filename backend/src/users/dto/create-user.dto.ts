@@ -35,7 +35,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @Max(50)
+  @MaxLength(50)
   readonly organizationId: string;
 
   @IsString()

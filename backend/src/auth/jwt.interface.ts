@@ -3,4 +3,5 @@ export interface IJwtPayload {
   organizationId: string;
   userId: string;
   sub: string;
+  role?: string;
 }
