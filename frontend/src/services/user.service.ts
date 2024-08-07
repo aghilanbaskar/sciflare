@@ -1,5 +1,10 @@
 import { AxiosPromise } from 'axios';
-import { IUser, IUserCreate } from '../interfaces/User';
+import {
+  IUser,
+  IUserCreate,
+  IUserSearch,
+  IUserUpdate,
+} from '../interfaces/User';
 import axiosInstance from './base.service';
 
 class usersService {
@@ -12,6 +17,26 @@ class usersService {
 
   static async get(id: string): AxiosPromise<IUser> {
     return await usersService.request.get(`/users/${id}`);
+  }
+
+  static async update(id: string, data: IUserUpdate) {
+    const response = await usersService.request.patch(`/users/${id}`, data);
+    return response.data;
+  }
+
+  static async search(query: IUserSearch): AxiosPromise<{
+    users: IUser[];
+    count: number;
+  }> {
+    const response = await usersService.request.get(`/users/`, {
+      params: query,
+    });
+    return response;
+  }
+
+  static async delete(id: string) {
+    const response = await usersService.request.delete(`/users/${id}`);
+    return response.data;
   }
 }
 

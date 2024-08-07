@@ -5,7 +5,7 @@ export interface IUser {
   email: string;
   deleted: boolean;
   organizationId: string;
-  role: string;
+  role: userRoleEnum;
   isOwner: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -20,4 +20,25 @@ export interface IUserCreate {
   lastName: string;
   email: string;
   password: string;
+  role: userRoleEnum;
+}
+
+export interface IUserUpdate {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  role?: userRoleEnum;
+}
+
+export enum userRoleEnum {
+  USER = 'user',
+  ADMIN = 'admin',
+}
+
+export interface IUserSearch {
+  organizationId: string;
+  skip?: number;
+  limit?: number;
+  role?: userRoleEnum;
 }

@@ -47,7 +47,7 @@ export class UsersService {
     }
   }
 
-  findAll(searchUserDto: SearchUserDto) {
+  async findAll(searchUserDto: SearchUserDto) {
     const query: {
       organizationId: string;
       deleted: boolean;
@@ -59,7 +59,13 @@ export class UsersService {
     if (searchUserDto.role) {
       query.role = searchUserDto.role;
     }
-    return User.find(query).skip(searchUserDto.skip).limit(searchUserDto.limit);
+    const users = await User.find(query)
+      .skip(searchUserDto.skip)
+      .limit(searchUserDto.limit);
+    return {
+      users: users.map((user) => user.toJSON()),
+      count: await User.countDocuments(query),
+    };
   }
 
   async findOne(id: string) {
@@ -86,6 +92,9 @@ export class UsersService {
       const user = await User.findById(id);
       if (!user || user.deleted) {
         throw new NotFoundException('User not found');
+      }
+      if (user.isOwner && updateUserDto.role !== user.role) {
+        throw new BadRequestException('Cannot update owner');
       }
       user.firstName = updateUserDto.firstName;
       user.lastName = updateUserDto.lastName;

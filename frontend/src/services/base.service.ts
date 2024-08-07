@@ -52,9 +52,17 @@ axiosInstance.interceptors.response.use(
 const refreshAuthToken = async (
   refreshToken: string
 ): Promise<{ accessToken: string }> => {
-  const response = await axios.post(`${baseURL}/auth/refresh-token`, {
-    refreshToken,
-  });
+  const response = await axios.post(
+    `${baseURL}/auth/refresh`,
+    {
+      refreshToken,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    }
+  );
   return response.data;
 };
 

@@ -14,7 +14,7 @@ class AuthService {
     return AuthService.request.post('/auth/login', loginDto);
   }
 
-  static signup(signupDto: ISignup) {
+  static signup(signupDto: ISignup): AxiosPromise<ILoginSuccess> {
     return AuthService.request.post('/auth/signup', signupDto);
   }
 }

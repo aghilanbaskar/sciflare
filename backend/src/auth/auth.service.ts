@@ -39,10 +39,7 @@ export class AuthService {
       });
       const userData = await user.save({ session });
       await session.commitTransaction();
-      return {
-        user: userData,
-        organization: organizationData,
-      };
+      return this.singleUserLogin(userData);
     } catch (error) {
       await session.abortTransaction();
       if (error && error.code === 11000) {
@@ -118,6 +115,9 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token is required');
+    }
     const payload: IJwtPayload = this.jwtService.verify(refreshToken, {
       secret: process.env.JWT_REFRESH_SECRET,
     });
@@ -132,7 +132,7 @@ export class AuthService {
       role: payload.role,
     };
     return {
-      access_token: this.jwtService.sign({
+      accessToken: this.jwtService.sign({
         jwtPayload,
       }),
     };

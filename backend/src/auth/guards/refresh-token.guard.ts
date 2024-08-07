@@ -12,14 +12,17 @@ export class RefreshTokenGuard extends AuthGuard('refresh-token') {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user, info) {
+  handleRequest(err, user, info, context: ExecutionContext,) {
     if (err || info || !user) {
       return err || info || new UnauthorizedException();
     }
+    const request = context.switchToHttp().getRequest();
+    request.user = user;
+    const refreshToken = request.headers.authorization?.split(' ')?.[1];
 
     return UserSession.findOne({
-      userId: user._id,
-      refreshToken: info.refreshToken,
+      userId: user.userId,
+      refreshToken: refreshToken,
     })
       .lean()
       .then((session) => {

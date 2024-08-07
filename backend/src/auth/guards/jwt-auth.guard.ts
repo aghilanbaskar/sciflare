@@ -1,7 +1,8 @@
 import {
   ExecutionContext,
   Injectable,
-  UnauthorizedException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -35,7 +36,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   ): TUser {
     const request = context.switchToHttp().getRequest();
     if (err || info || !user) {
-      return err || info || new UnauthorizedException();
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
     request.user = user;
     return user;

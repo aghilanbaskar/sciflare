@@ -16,7 +16,7 @@ const UIModal: React.FC<UIModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="ui-modal-overlay" onClick={onClose}>
+    <div className="ui-modal-overlay z-100 w-full" onClick={onClose}>
       <div className="ui-modal" onClick={(e) => e.stopPropagation()}>
         <div className="ui-modal-header">
           {title && <h2>{title}</h2>}

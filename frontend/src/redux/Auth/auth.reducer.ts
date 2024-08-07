@@ -29,7 +29,21 @@ const authReducer = (
       localStorage.setItem('refreshToken', payload.refreshToken);
       return payload;
     }
+    case authTypes.SIGNOUT: {
+      localStorage.removeItem('auth');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      return {
+        ...INITIAL_STATE,
+      };
+    }
     case authTypes.SIGNIN_SUCCESS: {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    }
+    case authTypes.SIGNUP: {
       return {
         ...state,
         ...action.payload,

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Route,
   createBrowserRouter,
@@ -13,6 +13,9 @@ import LoginPage from './pages/LoginPage';
 import { IAuthState } from './redux/Auth/auth.types';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeAuth } from './redux/Auth/auth.action';
+import ProfilePage from './pages/ProfilePage';
+import UsersPage from './pages/UsersPage';
+import OrganizationPage from './pages/OrganizationPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +23,9 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/users" element={<UsersPage />} />
+      <Route path="/organization" element={<OrganizationPage />} />
     </Route>
   )
 );
@@ -30,9 +36,10 @@ const mapState = ({ auth }: { auth: IAuthState }) => ({
 function App() {
   const dispatch = useDispatch();
   const { userId } = useSelector(mapState);
+  const [firstTime, setFirstTime] = useState(true);
   useEffect(() => {
-    console.log('User Id Changed', userId);
-    dispatch(initializeAuth(userId));
+    dispatch(initializeAuth(userId, firstTime));
+    setFirstTime(false);
   }, [userId]);
   return <RouterProvider router={router} />;
 }

@@ -20,7 +20,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [organizationId, setOrganizationId] = useState<string>('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -41,7 +40,10 @@ const LoginPage = () => {
     }
   }, [success]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    organizationId?: string
+  ) => {
     try {
       e?.preventDefault();
       dispatch(
@@ -55,11 +57,13 @@ const LoginPage = () => {
   };
 
   const cardClicked = (id: string) => {
-    setOrganizationId(id);
     setModalOpen(false);
-    handleSubmit({
-      preventDefault: () => {},
-    } as React.FormEvent<HTMLFormElement>);
+    handleSubmit(
+      {
+        preventDefault: () => {},
+      } as React.FormEvent<HTMLFormElement>,
+      id
+    );
   };
 
   const resetForm = () => {
@@ -143,6 +147,7 @@ const LoginPage = () => {
             multipleUsers.map((user) => {
               return (
                 <Card
+                  className="cursor-pointer w-full"
                   key={user.id}
                   title={user.companyName}
                   onClick={() => {
