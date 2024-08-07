@@ -69,7 +69,6 @@ const LoginPage = () => {
   const resetForm = () => {
     setEmail('');
     setPassword('');
-    setOrganizationId('');
     setErrors([]);
     setModalOpen(false);
   };
