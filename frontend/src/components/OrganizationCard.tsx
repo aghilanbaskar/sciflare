@@ -36,7 +36,7 @@ const OrganizationCard = ({ onOrganizationSaved }: OrganizationCardProps) => {
         }
       }
     },
-    [organizationId, onOrganizationSaved]
+    [organizationId, companyName, onOrganizationSaved]
   );
 
   const getOrganizationData = useCallback(async () => {

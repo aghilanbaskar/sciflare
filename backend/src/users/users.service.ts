@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -96,6 +97,12 @@ export class UsersService {
       if (user.isOwner && updateUserDto.role !== user.role) {
         throw new BadRequestException('Cannot update owner');
       }
+      if (
+        user.role === userRoleEnum.USER &&
+        updateUserDto.role !== userRoleEnum.ADMIN
+      ) {
+        throw new BadRequestException('Cannot update user to admin');
+      }
       user.firstName = updateUserDto.firstName;
       user.lastName = updateUserDto.lastName;
       user.email = updateUserDto.email;
@@ -106,6 +113,9 @@ export class UsersService {
     } catch (error) {
       if (error && error.code === 11000) {
         throw new BadRequestException('User email already exists');
+      }
+      if (error instanceof HttpException) {
+        throw error;
       }
       throw new InternalServerErrorException('Error while updating user');
     }

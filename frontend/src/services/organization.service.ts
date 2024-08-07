@@ -6,14 +6,14 @@ class usersService {
   static request = axiosInstance;
 
   static async get(id: string): AxiosPromise<IOrganization> {
-    return await usersService.request.get(`/users/${id}`);
+    return await usersService.request.get(`/organization/${id}`);
   }
 
   static async update(
     id: string,
     data: IOrganizationUpdate
   ): AxiosPromise<IOrganization> {
-    return await usersService.request.patch(`/users/${id}`, data);
+    return await usersService.request.patch(`/organization/${id}`, data);
   }
 }
 

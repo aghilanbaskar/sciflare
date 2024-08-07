@@ -155,7 +155,6 @@ const ProfileCard = ({ userId, onUserSaved }: ProfileCardProps) => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               placeholder="••••••••"
-              required
               label="Password"
             />
           </div>

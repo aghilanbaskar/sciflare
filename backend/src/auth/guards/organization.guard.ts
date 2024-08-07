@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import User, { userRoleEnum } from 'src/models/users.model';
+import { IJwtPayload } from '../jwt.interface';
 
 @Injectable()
 export class canAccessOrganization implements CanActivate {
@@ -31,7 +32,7 @@ export class canAccessUser implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user: IJwtPayload = request.user;
     const userId =
       request.params.userId ||
       request.body.userId ||
@@ -40,7 +41,7 @@ export class canAccessUser implements CanActivate {
     if (!userId) {
       return false;
     }
-    if (user.id === userId) {
+    if (user.userId === userId) {
       // same user
       return true;
     }
